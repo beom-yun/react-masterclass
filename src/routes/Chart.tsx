@@ -38,8 +38,16 @@ function Chart({ coinId }: ChartProps) {
             chart: { height: 300, width: 500, toolbar: { show: false }, background: 'transparent' },
             stroke: { curve: 'smooth', width: 3 },
             grid: { show: false },
-            xaxis: { labels: { show: false }, axisTicks: { show: false } },
+            xaxis: {
+              labels: { show: false },
+              axisTicks: { show: false },
+              categories: data?.map(price => new Date(price.time_open * 1000).toISOString()),
+              type: 'datetime',
+            },
             yaxis: { show: false },
+            fill: { type: 'gradient', gradient: { gradientToColors: ['#0be881'], stops: [0, 100] } },
+            colors: ['#0fbcf9'],
+            tooltip: { y: { formatter: value => `$${value.toFixed(2)}` } },
           }}
         />
       )}
