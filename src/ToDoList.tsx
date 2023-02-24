@@ -39,6 +39,8 @@ interface IForm {
   firstName: string;
   lastName: string;
   password: string;
+  password1: string;
+  extraError?: string;
 }
 
 function ToDoList() {
@@ -46,8 +48,14 @@ function ToDoList() {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<IForm>();
-  const onValid = (data: any) => {};
+  const onValid = (data: IForm) => {
+    if (data.password !== data.password1) {
+      setError('password1', { message: 'Password are not the same' }, { shouldFocus: true });
+    }
+    // setError('extraError', { message: 'Server offline.' });
+  };
   console.log(errors);
 
   return (
@@ -64,19 +72,31 @@ function ToDoList() {
           placeholder="Email"
         />
         <span>{errors?.email?.message}</span>
-        <input {...register('firstName', { required: 'First name is required' })} placeholder="First Name" />
+        <input
+          {...register('firstName', {
+            required: 'First name is required',
+            validate: {
+              noNico: value => (value.includes('nico') ? 'no nicos allowed' : true),
+              noNick: value => (value.includes('nick') ? 'no nicks allowed' : true),
+            },
+          })}
+          placeholder="First Name"
+        />
         <span>{errors?.firstName?.message}</span>
         <input {...register('lastName', { required: 'Last name is required' })} placeholder="Last Name" />
         <span>{errors?.lastName?.message}</span>
         <input
-          {...register('password', {
-            required: 'Please write a password',
-            minLength: { value: 4, message: 'Too short password' },
-          })}
+          {...register('password', { required: 'Please write a password', minLength: 5 })}
           placeholder="Password"
         />
         <span>{errors?.password?.message}</span>
+        <input
+          {...register('password1', { required: 'Please write a password again', minLength: 5 })}
+          placeholder="Password1"
+        />
+        <span>{errors?.password1?.message}</span>
         <button>Add</button>
+        <span>{errors?.extraError?.message}</span>
       </form>
     </div>
   );
