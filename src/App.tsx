@@ -7,7 +7,7 @@ import Board from './components/Board';
 const Wrapper = styled.div`
   display: flex;
   max-width: 680px;
-  width: 100%;
+  width: 100vw;
   height: 100vh;
   margin: 0 auto;
   justify-content: center;
@@ -23,14 +23,17 @@ const Boards = styled.div`
 
 function App() {
   const [toDos, setToDos] = useRecoilState(toDoState);
-  const onDragEnd = ({ source, destination, draggableId }: DropResult) => {
-    if (!destination) return;
-    // setToDos(oldToDos => {
-    //   const toDosCopy = [...oldToDos];
-    //   toDosCopy.splice(source.index, 1);
-    //   toDosCopy.splice(destination?.index, 0, draggableId);
-    //   return toDosCopy;
-    // });
+  const onDragEnd = (info: DropResult) => {
+    console.log(info);
+    const { source, destination, draggableId } = info;
+    if (source.droppableId === destination?.droppableId) {
+      setToDos(allBoards => {
+        const boardCopy = [...allBoards[source.droppableId]];
+        boardCopy.splice(source.index, 1);
+        boardCopy.splice(destination?.index, 0, draggableId);
+        return { ...allBoards, [source.droppableId]: boardCopy };
+      });
+    }
   };
 
   return (
