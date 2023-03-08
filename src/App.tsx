@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { motion, useMotionValue, useMotionValueEvent, Variants } from 'framer-motion';
+import { motion, useMotionValue, useMotionValueEvent, useTransform, Variants } from 'framer-motion';
 
 const Wrapper = styled.div`
   height: 100vh;
@@ -35,11 +35,12 @@ const boxVariants: Variants = {
 
 function App() {
   const x = useMotionValue(0);
-  useMotionValueEvent(x, 'change', value => console.log(value));
+  const scale = useTransform(x, [-800, 0, 800], [2, 1, 0.1]);
+  // useMotionValueEvent(scale, 'change', value => console.log(scale.get()));
 
   return (
     <Wrapper>
-      <Box style={{ x }} drag="x" dragSnapToOrigin />
+      <Box style={{ x, scale }} drag="x" dragSnapToOrigin />
     </Wrapper>
   );
 }
