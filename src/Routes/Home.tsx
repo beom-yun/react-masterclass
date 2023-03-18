@@ -57,12 +57,23 @@ const Box = styled(motion.div)<{ bgPhoto: string }>`
   height: 200px;
   color: red;
   font-size: 66px;
+  &:first-child {
+    transform-origin: center left;
+  }
+  &:last-child {
+    transform-origin: center right;
+  }
 `;
 
 const rowVariants: Variants = {
   hidden: { x: window.outerWidth + 5 },
   visible: { x: 0 },
   exit: { x: -window.outerWidth - 5 },
+};
+
+const boxVariants: Variants = {
+  normal: { scale: 1 },
+  hover: { scale: 1.3, y: -50, transition: { delay: 0.5, duration: 0.25, type: 'tween' } },
 };
 
 const offset = 6;
@@ -106,7 +117,14 @@ function Home() {
                   .slice(1)
                   .slice(offset * index, offset * (index + 1))
                   .map(movie => (
-                    <Box key={movie.id} bgPhoto={makeImagePath(movie.backdrop_path, 'w500')} />
+                    <Box
+                      key={movie.id}
+                      variants={boxVariants}
+                      initial="normal"
+                      whileHover="hover"
+                      transition={{ type: 'tween' }}
+                      bgPhoto={makeImagePath(movie.backdrop_path, 'w500')}
+                    />
                   ))}
               </Row>
             </AnimatePresence>
